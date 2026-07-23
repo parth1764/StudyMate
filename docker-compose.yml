@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - GROQ_MODEL=${GROQ_MODEL:-llama-3.3-70b-versatile}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      - SUMMARIZATION_MODEL=${SUMMARIZATION_MODEL:-sshleifer/distilbart-cnn-12-6}
+      - DATA_DIR=/data
+    volumes:
+      - ./data:/data
+      - hf-cache:/root/.cache/huggingface
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - API_PROXY_TARGET=http://backend:8000
+    depends_on:
+      - backend
+
+volumes:
+  hf-cache:

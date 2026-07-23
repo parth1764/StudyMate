@@ -1,0 +1,29 @@
+# Install torch separately first with the CPU-only index for a much smaller download:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+# then:
+#   pip install -r requirements.txt
+
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9
+pydantic==2.9.2
+pydantic-settings==2.5.2
+sqlalchemy==2.0.35
+python-dotenv==1.0.1
+
+# RAG / embeddings / vector store
+faiss-cpu==1.8.0.post1
+sentence-transformers==3.1.1
+numpy==1.26.4
+
+# Summarization (local, CPU)
+transformers==4.44.2
+
+# LLM API
+groq==1.5.0
+
+# Document parsing
+pypdf==4.3.1
+python-docx==1.1.2
+python-pptx==1.0.2
+webvtt-py==0.4.6

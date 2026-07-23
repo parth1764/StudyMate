@@ -57,6 +57,21 @@ body {
   font-size: 0.9rem;
 }
 
+.youtube-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.youtube-box input {
+  width: 100%;
+}
+
+.youtube-box button {
+  align-self: stretch;
+  text-align: center;
+}
+
 .doc-list {
   list-style: none;
   margin: 0;

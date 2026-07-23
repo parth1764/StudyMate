@@ -29,6 +29,15 @@ export async function uploadDocument(file) {
   return handle(res);
 }
 
+export async function ingestYoutube(url) {
+  const res = await fetch(`${BASE}/documents/youtube`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url }),
+  });
+  return handle(res);
+}
+
 export async function deleteDocument(documentId) {
   const res = await fetch(`${BASE}/documents/${documentId}`, { method: "DELETE" });
   return handle(res);

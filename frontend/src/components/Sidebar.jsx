@@ -1,10 +1,13 @@
 import { useRef, useState } from "react";
-import { deleteDocument, uploadDocument } from "../api.js";
+import { deleteDocument, ingestYoutube, uploadDocument } from "../api.js";
 
 export default function Sidebar({ documents, selectedId, onSelect, onChange }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const inputRef = useRef(null);
+
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [ytLoading, setYtLoading] = useState(false);
 
   async function handleFile(e) {
     const file = e.target.files[0];
@@ -19,6 +22,21 @@ export default function Sidebar({ documents, selectedId, onSelect, onChange }) {
     } finally {
       setUploading(false);
       inputRef.current.value = "";
+    }
+  }
+
+  async function handleYoutube() {
+    if (!youtubeUrl.trim()) return;
+    setYtLoading(true);
+    setError(null);
+    try {
+      await ingestYoutube(youtubeUrl.trim());
+      setYoutubeUrl("");
+      await onChange();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setYtLoading(false);
     }
   }
 
@@ -48,6 +66,20 @@ export default function Sidebar({ documents, selectedId, onSelect, onChange }) {
         <label htmlFor="file-upload">
           {uploading ? "Uploading & indexing…" : "+ Upload PDF / DOCX / PPTX / transcript"}
         </label>
+      </div>
+
+      <div className="youtube-box">
+        <input
+          type="text"
+          placeholder="Paste a YouTube video link…"
+          value={youtubeUrl}
+          onChange={(e) => setYoutubeUrl(e.target.value)}
+          disabled={ytLoading}
+          onKeyDown={(e) => e.key === "Enter" && handleYoutube()}
+        />
+        <button className="primary" onClick={handleYoutube} disabled={ytLoading || !youtubeUrl.trim()}>
+          {ytLoading ? "Fetching transcript & indexing…" : "Add YouTube video"}
+        </button>
       </div>
 
       {error && <div className="error-banner">{error}</div>}

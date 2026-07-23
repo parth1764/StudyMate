@@ -15,6 +15,10 @@ class DocumentOut(BaseModel):
         from_attributes = True
 
 
+class YouTubeIngestRequest(BaseModel):
+    url: str = Field(..., min_length=1)
+
+
 class AskRequest(BaseModel):
     question: str = Field(..., min_length=1)
     document_id: str | None = Field(

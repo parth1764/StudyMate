@@ -27,3 +27,7 @@ pypdf==4.3.1
 python-docx==1.1.2
 python-pptx==1.0.2
 webvtt-py==0.4.6
+
+# YouTube ingestion (captions only, no audio download / no GPU)
+youtube-transcript-api==1.2.4
+httpx==0.28.1

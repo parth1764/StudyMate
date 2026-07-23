@@ -1,8 +1,9 @@
 # StudyMate — AI-Powered Learning Assistant
 
-RAG-based study assistant that ingests PDFs, Word docs, PowerPoint slides, and
-video transcripts, then lets you ask questions over them (RAG), generate
-summaries, and auto-generate quizzes for revision.
+RAG-based study assistant that ingests PDFs, Word docs, PowerPoint slides,
+video transcripts, and YouTube videos (via their existing captions), then
+lets you ask questions over them (RAG), generate summaries, and
+auto-generate quizzes for revision.
 
 Runs entirely on **CPU** — no GPU required:
 
@@ -110,9 +111,27 @@ Whisper pass). Instead, StudyMate ingests transcript files directly —
 export. If you need audio-to-transcript, run `whisper` or `faster-whisper`
 (`tiny`/`base` model, CPU) separately and feed the resulting `.srt` in.
 
+## YouTube video summarizer
+
+Paste a YouTube link in the sidebar (`youtube.com/watch?v=`, `youtu.be/`, or
+`/shorts/` links all work) and StudyMate will:
+
+1. Pull the video's existing caption track via `youtube-transcript-api` — no
+   audio download, no Whisper, no GPU. Prefers English captions, falls back
+   to whatever caption track is available.
+2. Fetch the video title via YouTube's public oEmbed endpoint (no API key
+   needed).
+3. Chunk, embed, and index the transcript exactly like an uploaded document
+   — it then shows up in Chat / Summarize / Quiz like any other document.
+
+This only works for videos that have captions (manual or auto-generated).
+Videos with captions disabled, or that are private/unavailable, return a
+422 with a clear error message instead of failing silently.
+
 ## API endpoints
 
 - `POST /api/documents/upload` — upload a file, extract + chunk + embed + index it
+- `POST /api/documents/youtube` — ingest a YouTube video by URL (fetches captions + title, then indexes it)
 - `GET /api/documents` — list ingested documents
 - `DELETE /api/documents/{id}` — remove a document and its vectors
 - `POST /api/chat/ask` — ask a question (RAG over one document or the whole corpus)
